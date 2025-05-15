@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>100 Colorful Balls in a Sphere</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Include Three.js and OrbitControls from a CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <!-- Note the corrected path with "examples/js/controls" -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // Global variables
+    let scene, camera, renderer, controls;
+    const boundaryRadius = 300; // Radius of the invisible boundary sphere
+    const balls = []; // Array to store ball objects
+
+    init();
+    animate();
+
+    function init() {
+      // Create the scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x000000);
+
+      // Create a perspective camera
+      camera = new THREE.PerspectiveCamera(
+        75, 
+        window.innerWidth / window.innerHeight, 
+        1, 
+        2000
+      );
+      camera.position.set(0, 0, boundaryRadius * 2);
+      camera.lookAt(0, 0, 0);
+
+      // Create the renderer and add it to the document
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Add orbit controls so you can rotate the scene with the mouse
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+      // Add some lights
+      scene.add(new THREE.AmbientLight(0x404040));
+      const pointLight = new THREE.PointLight(0xffffff, 1);
+      pointLight.position.set(0, 0, 500);
+      scene.add(pointLight);
+
+      // (Optional) Create a wireframe sphere to visualize the boundary
+      const boundaryGeometry = new THREE.SphereGeometry(boundaryRadius, 32, 32);
+      const boundaryMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+      });
+      const boundaryMesh = new THREE.Mesh(boundaryGeometry, boundaryMaterial);
+      scene.add(boundaryMesh);
+
+      // Create 100 balls with random size, position, velocity, and color.
+      for (let i = 0; i < 100; i++) {
+        // Random radius between 5 and 15
+        const r = THREE.MathUtils.randFloat(5, 15);
+
+        // Create a sphere geometry for the ball
+        const geometry = new THREE.SphereGeometry(r, 16, 16);
+
+        // Pick a random color
+        const col = new THREE.Color(Math.random(), Math.random(), Math.random());
+        const material = new THREE.MeshPhongMaterial({ color: col });
+        const ballMesh = new THREE.Mesh(geometry, material);
+
+        // Determine a random starting position fully inside the boundary.
+        // Pick a random distance from the center (0 to boundaryRadius - r)
+        const dist = THREE.MathUtils.randFloat(0, boundaryRadius - r);
+        // Random spherical angles
+        const theta = THREE.MathUtils.randFloat(0, Math.PI * 2);
+        const phi = Math.acos(THREE.MathUtils.randFloatSpread(2)); // value in [0, π]
+        // Set position using spherical coordinates
+        const pos = new THREE.Vector3();
+        pos.setFromSphericalCoords(dist, phi, theta);
+        ballMesh.position.copy(pos);
+
+        // Give the ball a random velocity (speed between 1 and 3)
+        const velocity = new THREE.Vector3(
+          Math.random() * 2 - 1,
+          Math.random() * 2 - 1,
+          Math.random() * 2 - 1
+        ).normalize().multiplyScalar(THREE.MathUtils.randFloat(1, 3));
+
+        // Store ball data in an object
+        balls.push({
+          mesh: ballMesh,
+          radius: r,
+          velocity: velocity,
+        });
+
+        // Add the ball to the scene
+        scene.add(ballMesh);
+      }
+
+      // Handle browser resize
+      window.addEventListener("resize", onWindowResize, false);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Update each ball's position and check for collisions with the boundary
+      balls.forEach((ball) => {
+        // Move the ball
+        ball.mesh.position.add(ball.velocity);
+
+        // Calculate distance from the center
+        const distance = ball.mesh.position.length();
+        if (distance + ball.radius > boundaryRadius) {
+          // Collision detected: compute the normal at the collision point
+          const normal = ball.mesh.position.clone().normalize();
+          // Reflect the velocity: v = v - 2*(v·n)*n
+          const vDotN = ball.velocity.dot(normal);
+          ball.velocity.sub(normal.clone().multiplyScalar(2 * vDotN));
+          // Reposition the ball exactly on the inner surface
+          ball.mesh.position.copy(normal.clone().multiplyScalar(boundaryRadius - ball.radius));
+        }
+      });
+
+      // Update orbit controls and render the scene
+      controls.update();
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+</html>

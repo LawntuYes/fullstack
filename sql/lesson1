@@ -1,0 +1,4 @@
+CREATE TABLE invoice (
+    Invoice_number INT PRIMARY KEY,
+    Customer_number INT IDENTITY(3,6)
+)

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        .grid{
+            display: grid;
+            grid-template-rows: 150px;
+            padding: 3em;
+            gap: 2em;
+            border: 5px solid red;
+            margin-top: 10px;
+        }
+
+        .fill{
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+        .fit{
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .quote{
+            padding: 2em;
+            border-radius: 0.3em;
+            background-color: #ffba2d;
+        }
+        .b {
+            background-color: #ff2d5d;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="grid fill">
+        <div class="quote">1</div>
+        <div class="quote">2</div>
+        <div class="quote">3</div>
+        <div class="quote">4</div>
+    </div>
+
+    <div class="grid fit">
+        <div class="quote b">1</div>
+        <div class="quote b">2</div>
+        <div class="quote b">3</div>
+        <div class="quote b">4</div>
+    </div>
+</body>
+</html>

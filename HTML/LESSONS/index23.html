@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+        }
+        .circle {
+            width: 50px;
+            height: 50px;
+            background-color: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            25% {
+                transform: translate3d(100px, 200px, 0);
+            }
+
+            50% {
+                transform: scale(4);
+                background-color: #e60404;
+                border-radius: 10px;
+            }
+            100% {
+                transform: translate3d(0, 0, 0);
+                transform: scale(1);
+                background-color: #4cceeb;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="circle" style="margin-left: 50px;"></div>
+</body>
+</html>

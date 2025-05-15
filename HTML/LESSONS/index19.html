@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    div {
+        background-color: rosybrown;
+    }
+    h1 {
+        color: red;
+    }
+
+    /* Tablet */
+
+    @media  screen and (min-width: 768px) {
+        div{
+            background-color: lightblue;
+        }
+        h1 {
+            color: blue;
+        }
+    }
+
+    /* Laptops */
+    @media screen and (min-width: 1024px) {
+        div{
+            background-color: lightgreen;
+        }
+        h1 {
+            color: green;
+        }
+    }
+    
+    /* Desktops */
+    @media screen and (min-width: 1200px) {
+        div{
+            background-color: orange;
+        }
+        h1 {
+            color: lightcoral;
+        }
+    }
+    
+</style>
+<body>
+<div>
+        <h1>Title</h1>
+    </div>
+</body>
+</html>

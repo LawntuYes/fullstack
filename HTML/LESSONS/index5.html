@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        p::first-letter {
+            font-size: xx-large;
+            color: red;
+            font-style: italic;
+
+        }
+        .ipsum {
+            color: green;
+            font-size: x-large;
+            font-style: italic;
+        }
+        h1::before {
+            content: "🫠";
+        }
+        h1::after{
+            content: "😒";
+        }
+    </style>
+    <title>Shawarma</title>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <p> Lorem <span class="ipsum">ipsum</span>  dolor sit amet.</p>
+
+</body>
+</html>

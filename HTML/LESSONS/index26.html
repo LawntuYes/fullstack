@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .animation-box {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 10px;
+
+            animation-name: moveBox;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes moveBox {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(500px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .linear {
+            background-color: orange;
+            animation-timing-function: linear;
+        }
+
+        .ease {
+            background-color: blue;
+            animation-timing-function: ease;
+        }
+
+        .ease-in {
+            background-color: green;
+            animation-timing-function: ease-in;
+        }
+
+        .ease-out {
+            background-color: yellow;
+            animation-timing-function: ease-out;
+        }
+
+        .ease-in-out {
+            background-color: purple;
+            animation-timing-function: ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <h1>Animation Timing Function</h1>
+    <div class="containter">
+        <div class="animation-box linear">Linear</div>
+        <div class="animation-box ease">Ease</div>
+        <div class="animation-box ease-in"> Ease-In</div>
+        <div class="animation-box ease-out">Ease-Out</div>
+        <div class="animation-box ease-in-out">Ease-In-Out</div>
+        
+    </div>
+</body>
+</html>

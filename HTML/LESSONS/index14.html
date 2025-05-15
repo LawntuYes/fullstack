@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Grid container */
+       .grid-container {
+        background-color: #232323;
+        border: 7px solid red;
+        display: grid;
+
+        grid-template-rows: repeat(2,100px);
+        grid-template-columns: 100px minmax(100px, 4fr) 1fr;
+        width: 550px;
+       }
+       /* Grid item */
+       .grid-item {
+            background-color: #545151;
+            font-size: 2em;
+            display: flex;
+            place-items: center;
+            place-content: center;
+            border: 2px solid blue;
+
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="grid-container">
+            <div class="grid-item">🥭</div>
+            <div class="grid-item">🥭</div>
+            <div class="grid-item">🥭</div>
+        </div>
+    </main>
+</body>
+</html>

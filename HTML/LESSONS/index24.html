@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: white;
+            margin: 0;
+        }
+        
+        .wobble {
+            font-size: 4rem;
+            cursor: pointer;
+        }
+        .wobble:hover {
+            background: linear-gradient(20deg, #4caf50, #ffeb3b, #f44336);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: wobble 1s  infinite alternate ease-in-out;
+        }
+
+        /* CSS Wobble Animation */
+
+        @keyframes wobble {
+            0% { transform: translateX(0); }
+            15% {
+                transform: translateX(-25%);
+            }
+            30% {
+                transform: translateX(20%);
+            }
+            45% {
+                transform: translateX(-15%);
+            }
+            60% {
+                transform: translateX(10%);
+            }
+            75% {
+                transform: translateX(-5%);
+            }
+            100% {
+                transform: translateX(0);
+                background: linear-gradient(50deg, #f44336, #ffeb3b, #4caf50);
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="wobble">Woooooble</div>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+</head>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .profile-container {
+        background-color: #d6e1d7;
+        display: grid;
+        width: 1000px;
+        height: 1000px;
+        grid-template-rows: 90px repeat(3, 1fr) 90px;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 5px;
+        border-radius: 8px;       
+        grid-template-areas:
+            "header header header"
+            "aside section section"
+            "gal gal gal"
+            "gal gal gal"
+            "footer footer footer";
+
+    }
+
+    header {
+        grid-area: header;
+        background-color: #58ff33;
+        display: flex;
+        align-items: center;
+    }
+    header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    
+    button {
+        position: relative;
+        left: 65%;
+        padding: 0.4rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background-color: #efdddd;
+        transition: 0.1s;
+    }
+
+    button:active {
+        background-color: #ffdddd;
+        transition: 0.1s;
+    }
+
+    .profile-content {
+        display: flex;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    aside {
+        grid-area: aside;
+        background-color: #ddffd6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    section {
+        grid-area: section;
+        background-color: #e7ffd6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    nav {
+        grid-area: gal;
+        border-radius: 5px;
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 5px;
+        width: 980px;
+        height: 500px;
+
+    }
+    .content {
+        border-radius: 2px;
+        padding: 0.5rem;
+        font-size: 2rem;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        font-weight: bolder;
+        text-shadow: 1px 1px 1px #393939;
+        color: #393939;
+    }
+
+    
+
+    
+
+    img:nth-child(1) {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+        
+    img:nth-child(2) {
+        grid-area: 1 / 2 / 2 / 3;
+    }
+
+    img:nth-child(3) {
+        grid-area: 1 / 3 / 2 / 4;
+    }
+
+    img:nth-child(4) {
+        grid-area: 2 / 1 / 3 / 2;
+        height: 100%;
+    }
+
+    img:nth-child(5) {
+        grid-area: 2 / 2 / 3 / 3;
+        height: 100%;
+    }
+    img:nth-child(6) {
+        grid-area: 2 / 3 / 3 / 4;
+        height: 100%;
+    }
+    img {
+        border-radius: 2px;
+        height: 50%;
+        width: 100%;
+        object-fit: cover;
+    }
+    
+
+    
+    footer {
+        grid-area: footer;
+        background: #027b1a;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    footer a {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+
+</style>
+<body>
+    <div class="profile-container">
+        <header class="content">
+            <h1>John Pork</h1>
+            <button class="edit-profile">Edit Profile</button>
+        </header>
+            <aside class="content">Profile Picture</aside>
+        <section class="content">About me: I'm a web developer passionate about creating beautiful and user-friendly websites</section>
+        <nav class="content">
+            <img src="images/johnPork.jpg" alt="">
+            <img src="images/freakbob.jpg" alt="">
+            <img src="images/johnPork.jpg" alt="">
+            <img src="images/freakbob.jpg" alt="">
+            <img src="images/johnPork.jpg" alt="">
+            <img src="images/freakbob.jpg" alt="">
+            
+        </nav>
+        <footer>
+            <p>Contact me at <a href="mailto:john.pork@example.com">john.pork@example.com</a></p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wghat</title>
+</head>
+<style>
+    body {
+        background-color: darkgray;
+        * {
+            border: 1px solid black;
+        }
+    }
+</style>
+<body>
+    <!-- works like a block -->
+    <h1 style="background-color: chocolate; width: 25%;">Lorem, ipsum.</h1>
+
+    <!-- works like a block -->
+
+    <p style="background-color: yellow; width: 25%;">Lorem, ipsum.</p>
+
+    <!-- works like inline -->
+
+    <span style="background-color: crimson; width: 100%;">Lorem, ipsum.</span>
+
+    <!-- works like inline -->
+
+    <a style="background-color: yellowgreen; width: 100%;">Lorem, ipsum.</a>
+
+    <!-- תופם שורה שלמה *ויכול* לשנות את הרוחב -->
+
+    <div style="display: block; background-color: brown; width: 30%;">Block element (takes full width)</div>
+
+    <!-- תוםס רק את התוכן ו*לא* יכול לשנות את הרוחב -->
+
+    <div style="display: inline; background-color: aqua; width: 100%;"> inline element (takes only the width of the content)</div>
+
+    <!-- תופס רק את התוכן *ויכול* לשנות את -->
+
+    <div style="display: inline-block; background-color: bisque;">Inline-block element (takes the width of the content but can have padding and margin)</div>
+
+
+
+    <!-- מעלים את האלמט אבל מחתחשב בגודל שלו -->
+     <div style="visibility: hidden; height: 100px;"> Lorem, ipsum dolor.</div>
+     <!-- מעלים את האלמט ולא מחתחשב בגודל שלו -->
+    <div style="display: none;">Lorem, ipsum dolor.</div>
+    <div style="background-color: black; color: white;"> Lorem, ipsum dolor.</div>
+</body>
+</html>

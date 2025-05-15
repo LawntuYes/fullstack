@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: black;
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    
+    /* Grid container */
+    .grid-container {
+        border-radius: 5px;
+        grid-gap: 5px;
+        border: 6px solid #dfdfdf;
+        width: 850px;
+        height: 850px;
+
+        display: grid;
+        grid-template-rows: 70px repeat(3, 1fr) 70px;
+        grid-template-columns: repeat(4, 1fr);
+
+        grid-template-areas: 
+        "header header header header"
+        "main main main aside"
+        "nav nav aside aside"
+        "section section section aside"
+        "footer footer footer footer";
+    }
+    header {
+        grid-area: header;
+        background-color: #bc8311;
+    }
+    nav {
+        grid-area: nav;
+        background-color: #1c9524;
+    }
+    aside {
+        grid-area: aside;
+        background-color: #9f1b26;
+    }
+    main {
+        grid-area: main;
+        background-color: #162192;
+    }
+    section {
+        grid-area: section;
+        background-color: #5f1351;
+    }
+    footer {
+        grid-area: footer;
+        background-color: #236784;
+    }
+
+</style>
+<body>
+    <div class="grid-container">
+        <header>header</header>
+        <nav>nav</nav>
+        <main>main</main>
+        <aside>aside</aside>
+        <section>section</section>
+        <footer>footer</footer>
+    </div>
+</body>
+</html>

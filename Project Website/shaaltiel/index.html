@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <script src="script.js"></script>
+</head>
+<body>
+    <form>
+        <label for="book-type">Type</label>
+        <input id="booktype" type="text">
+        <label for="book-title">Title</label>
+        <input id="booktitle" type="text">
+        <label for="book-author">Author</label>
+        <input id="bookauthor" type="text">
+        <label for="book-price">Price</label>
+        <input id="bookprice" type="text">
+        <input type="button" value="Add Book" onclick="addBook()">
+    </form>
+
+    <script>
+        const bookList = [];
+
+        function addBook() {
+            const bookType = document.getElementById('booktype').value;
+            const bookTitle = document.getElementById('booktitle').value;
+            const bookAuthor = document.getElementById('bookauthor').value;
+            const bookPrice = document.getElementById('bookprice').value;
+
+            const book = {
+                type: bookType,
+                title: bookTitle,
+                author: bookAuthor,
+                price: bookPrice
+            }
+            bookList.push(book);
+            console.log(bookList);
+
+        }
+        function getMostExpensiveBook() {
+            if (bookList.length === 0) {
+                console.log("No books in the list.");
+                return null;
+            }
+
+            let mostExpensiveBook = bookList[0];
+            for (const book of bookList) {
+                if (book.price > mostExpensiveBook.price) {
+                    mostExpensiveBook = book;
+                }
+            }
+
+            console.log("Most Expensive Book:", mostExpensiveBook);
+            return mostExpensiveBook;
+        }
+
+    </script>
+
+</body>
+</html>

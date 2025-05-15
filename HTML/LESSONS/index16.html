@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+        }
+        body {
+            background-color: black;
+        } 
+        main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .grid-container{
+            background-color: rgb(73, 71, 71);
+            border: 1px solid rgb(197, 195, 193);
+            border-radius: 1rem;
+            box-shadow: #2323233a;
+            display: grid;
+            gap: 1rem;
+            padding: 1.25rem;
+            grid-template-rows: 150px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            max-width: 1200px;
+            width: 80%;
+        }
+        .grid-item {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px #0000003a;
+        }
+        .grid-item img{
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .grid-item:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .grid-item:nth-child(2) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        .grid-item:nth-child(3) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        .grid-item:nth-child(4) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .grid-item:nth-child(5) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        .grid-item:nth-child(6) {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+    </style>
+</head>
+<body>
+    <main>
+        <div class="grid-container">
+            <!-- div.gird-item>img -->
+            <div class="grid-item"><img src="images/pumpkin.jpg" alt="miau"></div>
+            <div class="grid-item"><img src="images/machmali.jpg" alt=""></div>
+            <div class="grid-item"><img src="images/hubjpg.jpg" alt=""></div>
+            <div class="grid-item"><img src="images/freakbob.jpg" alt=""></div>
+            <div class="grid-item"><img src="images/adi.jpg" alt=""></div>
+            <div class="grid-item"><img src="images/shakshuka.jpg" alt=""></div>
+        </div>
+    </main>
+</body>
+</html>

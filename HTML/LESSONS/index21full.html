@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+
+            animation-name: startpage;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .cards-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .card:hover{
+            animation-name: hoverCard;
+            animation-duration: 0.5s;
+            animation-timing-function: ease-in-out;
+            animation-fill-mode: forwards;
+            
+        }
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .card-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tag {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            color: #666;            
+        }
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: #333;
+            animation: moveText 1.5s ease-in-out forwards;
+        }
+        .card-text {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            animation: moveText 1.5s ease-in-out forwards;
+        }
+        .card-price {
+            font-size: 1.5rem;
+            color: #2ecc71;
+            font-weight: bold;
+            margin-bottom: 15px;
+
+            animation: moveText 1.5s ease-in-out forwards;
+        }
+        .card-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .card-button:hover {
+            background-color: #2980b9;
+            animation-name: hoverCard;
+            animation-duration: 0.5ms;
+            animation-fill-mode: forwards;
+        }
+        
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .card-image {
+                height: 220px;
+            }
+            .card-content {
+                padding: 25px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .card-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .card-image {
+                height: 250px;
+            }
+
+            .card-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-tags {
+                flex-wrap: wrap;
+            }
+            .card-content {
+                padding: 15px;
+            }
+            .card-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        @keyframes hoverCard {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes startpage {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes moveText {
+            0% {
+                opacity: 0;
+                transform: translateX(-200px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cards-grid">
+            <div class="card">
+                <img src="images/freakbob.jpg" alt="" class="card-image">
+                <div class="card-content">
+                    <div class="card-tags">
+                        <span class="tag">חדש</span>
+                        <span class="tag">במבצע</span>
+                    </div>
+                    <h2 class="card-title">מוצר פרמיום</h2>
+                    <p class="card-text">
+                        תיאור המוצר עם כל היתרונות והחסרונות המיוחדות שלו
+                    </p>    
+                    <p class="card-price">$199.90</p>
+                    <a href="" class="card-button">הוסף לסל</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/freakbob.jpg" alt="" class="card-image">
+                <div class="card-content">
+                    <div class="card-tags">
+                        <span class="tag">חדש</span>
+                        <span class="tag">במבצע</span>
+                    </div>
+                    <h2 class="card-title">מוצר פרמיום</h2>
+                    <p class="card-text">
+                        תיאור המוצר עם כל היתרונות והחסרונות המיוחדות שלו
+                    </p>
+                    <p class="card-price">$199.90</p>
+                    <a href="" class="card-button">הוסף לסל</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/freakbob.jpg" alt="" class="card-image">
+                <div class="card-content">
+                    <div class="card-tags">
+                        <span class="tag">חדש</span>
+                        <span class="tag">במבצע</span>
+                    </div>
+                    <h2 class="card-title">מוצר פרמיום</h2>
+                    <p class="card-text">
+                        תיאור המוצר עם כל היתרונות והחסרונות המיוחדות שלו
+                    </p>
+                    <p class="card-price">$199.90</p>
+                    <a href="" class="card-button">הוסף לסל</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/freakbob.jpg" alt="" class="card-image">
+                <div class="card-content">
+                    <div class="card-tags">
+                        <span class="tag">חדש</span>
+                        <span class="tag">במבצע</span>
+                    </div>
+                    <h2 class="card-title">מוצר פרמיום</h2>
+                    <p class="card-text">
+                        תיאור המוצר עם כל היתרונות והחסרונות המיוחדות שלו
+                    </p>
+                    <p class="card-price">$199.90</p>
+                    <a href="" class="card-button">הוסף לסל</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>miau</title>
+    <style>
+        * {
+            border: 1px solid rgb(64, 154, 211);
+        }
+        .container {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+        }
+        .item {
+            background-color: lightblue;
+            padding: 20px;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item" style="order: 2;" >Item 1</div>
+        <div class="item" style="order: 1;">Item 2</div>
+        <div class="item">Item 3</div>
+
+    </div>
+</body>
+</html>

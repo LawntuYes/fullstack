@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e3f2fd; /* Light blue background */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px; 
+            margin: auto;
+            background: #ffffff; /* White background for the container */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border: 5px solid #4A90E2; /* Blue border */
+        }
+        h1 {
+            text-align: center;
+            color: #E91E63; /* Pink color for the heading */
+        }
+        h4 {
+            text-align: center;
+            color: #3F51B5; /* Indigo color for the subheading */
+        }
+        img.imgofme {
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        hr {
+            border: none;
+            height: 2px;
+            background: #E0E0E0;
+            margin: 20px 0;
+        }
+        .myemail, .myphone {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #009688; /* Teal color */
+        }
+        .hobbieslist {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+            color: #b16e22; /* Orange color for hobbies */
+        }
+        .hobbieslist li {
+            font-size: 1.2em;
+            margin: 5px 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .goto {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #4A90E2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .goto:hover {
+            background-color: #357ABD;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 2px solid #E0E0E0;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f7f7f7;
+            color: #3F51B5; /* Indigo color for table header */
+        }
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #E0E0E0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f8e9; /* Light green background for textarea */
+        }
+        button {
+            display: inline-lock;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>About Me</h1>
+        <h4>Michael Goldin Aronov</h4>
+        <img src="WhatsApp Image 2024-09-09 at 10.46.42_c9007692.jpg" alt="Michael" class="imgofme">
+        
+        <hr>
+        <div class="myemail">Email: <a href="mailto:michaelgoldin2006@gmail.com">michaelgoldin2006@gmail.com</a></div>
+        <div class="myphone">Phone: +972546976525</div>
+        
+        <hr>
+        <h3 style="color: #ff2222;">Hobbies</h3>
+        <ol class="hobbieslist">
+            <li>Skating</li>
+            <li>Gaming</li>
+            <li>IDK man everything else</li>
+            <li>Driving</li>
+        </ol>
+        
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+            </tr>
+            <tr>
+                <td>Michael</td>
+                <td>michael@gmail.com</td>
+                <td>97</td>
+            </tr>
+            <tr>
+                <td>Mom</td>
+                <td>mom@gmail.com</td>
+                <td>49</td>
+            </tr>
+            <tr>
+                <td>Dad</td>
+                <td>dad@gmail.com</td>
+                <td>50</td>
+            </tr>
+            <tr>
+                <td>Brother</td>
+                <td>bro@gmail.com</td>
+                <td>69</td>
+            </tr>
+        </table>
+        
+        <textarea name="TextTwo" id="txt2" cols="50" rows="4" placeholder="Leave a message..."></textarea>
+        
+        <button>
+            <a href="index.html" class="goto">Index</a>
+        </button>
+    </div>
+</body>
+</html>

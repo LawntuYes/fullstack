@@ -1,0 +1,60 @@
+/* Reset some default styles */
+:root {
+    --main-color:#e2dfc9;
+    --default-color:#343a40;
+    --accent-color:#ff8800;
+}
+.dark-theme {
+    --main-color:#212529;
+    --default-color:#f8f9fa;
+    --accent-color:#e0d03c;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--main-color);
+}
+
+
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px 30px;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+.logo img{
+    height: 24px;
+    width: auto;
+    display: block;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.nav-links li a:hover {
+    color: var(--accent-color);
+}
+
+.container {
+    color: var(--default-color);
+    margin-top: 300px;
+    margin-left: 300px;
+}
