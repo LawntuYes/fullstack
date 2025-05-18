@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
     const typeFilter = document.getElementById('type-filter');
 
+
     searchInput.addEventListener('input', filterAndRender);
     typeFilter.addEventListener('change', filterAndRender);
 
@@ -191,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButton.textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
         localStorage.setItem('theme', isDark ? 'light' : 'dark');
     });
+    //edit button
     const modal = document.getElementById('edit-modal');
     const editForm = document.getElementById('edit-form');
     const closeModalBtn = document.getElementById('close-modal');

@@ -230,7 +230,7 @@ body.light-mode #dark-mode-toggle {
 body.light-mode #dark-mode-toggle:hover {
     background-color: #e0e0e0;
 }
-body.dark-mode {
+body.dark-mode, .dark-mode .transactions-list {
     background-color: #1e1e1e;
     color: #e0e0e0;
 }
@@ -240,8 +240,7 @@ body.dark-mode {
 }
 .dark-mode .container,
 .dark-mode .form-container,
-.dark-mode .summary,
-.dark-mode .transactions-list {
+.dark-mode .summary{
     background-color: #2a2a2a;
     color: #e0e0e0;
 }
