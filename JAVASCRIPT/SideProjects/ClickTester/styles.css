@@ -1,0 +1,75 @@
+/* filepath: c:\FullStack\JAVASCRIPT\SideProjects\ClickTester\styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Dark background */
+    color: #ffffff; /* Light text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background-color: #1e1e1e; /* Slightly lighter dark background for contrast */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+button {
+    font-size: 1.5rem; /* Larger font size for buttons */
+    padding: 15px 30px; /* Bigger button size */
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #9000ff; /* Button color */
+    color: #ffffff;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #420f90; /* Darker blue on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+}
+
+#clickButton {
+    font-size: 2rem; /* Even larger font size for the "Click Me!" button */
+    padding: 20px 40px;
+}
+
+#result, #cps {
+    margin-top: 20px;
+    font-size: 1.5rem;
+}
+
+#click-area {
+    width: 300px;
+    height: 300px;
+    background-color: #7a15bc;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#click-area:hover {
+    background-color: #460988;
+}
