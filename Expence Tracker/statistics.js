@@ -32,6 +32,7 @@ class CurrencyManager {
         console.error("Error fetching exchange rates:", error);
         }
     }
+    // update ui holy fucking shit
 
     updateUI() {
         document.getElementById("eur").innerText = (this.rates.EUR ?? 0).toFixed(4);

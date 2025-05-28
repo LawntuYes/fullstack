@@ -442,7 +442,7 @@ td {
 }
 
 /* RESET */
-    * {
+    /* * {
         box-sizing: border-box;
     }
     body {
@@ -451,7 +451,7 @@ td {
         background-color: #f8f9fb;
         font-family: 'Segoe UI', sans-serif;
         color: #333;
-    }
+    } */
 
     /* MAIN CONTAINER */
     .exchange-box {
@@ -496,7 +496,7 @@ td {
         font-size: 15px;
         border: none;
         border-radius: 6px;
-        background-color: #4f7ee4;
+        background-color: #4fd5e4;
         color: #fff;
         cursor: pointer;
         white-space: nowrap;
@@ -506,13 +506,13 @@ td {
     }
 
     .input-group button:hover {
-        background-color: #3d6cce;
+        background-color: #3daace;
     }
 
     /* RATES CONTAINER */
     .rates {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 12px;
     }
 
@@ -532,6 +532,7 @@ td {
     .rate-item span {
         color: #4f7ee4;
         font-weight: 600;
+        margin-left: 20px;
     }
 
     /* TIMESTAMP */
@@ -541,3 +542,33 @@ td {
         font-size: 13px;
         color: #666;
     }
+
+
+.dark-mode .exchange-box {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+.dark-mode .input-group select {
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+}
+.dark-mode .input-group button {
+    background-color: #4c91af;
+    color: white;
+}
+.dark-mode .input-group button:hover {
+    background-color: #4568a0;
+}
+.dark-mode .rates {
+    background-color: #2a2a2a;
+}
+.dark-mode .rate-item {
+    background-color: #333;
+    border: 1px solid #555;
+}
+.dark-mode .rate-item span {
+    color: #4fb0e4;
+}
