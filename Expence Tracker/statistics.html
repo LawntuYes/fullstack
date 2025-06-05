@@ -4,47 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="statistics.js" defer type="module"></script>
-    <title>Statistics</title>
+    <title>Expense & Income Statistics</title>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-link">Transactions</a>
             <a href="statistics.html" class="nav-link active">Statistics</a>
-            
         </div>
     </nav>
-    <div class="theme-toggle">
-        <button id="dark-mode-toggle">🌙 Dark Mode</button>
-    </div>
-    
-    <div class="exchange-box">
-        <h2>Exchange Rates</h2>
 
-        <div class="input-group">
-        <select id="base-currency">
-            <option value="ILS">ILS</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-        </select>
-        <button id="refresh-button">Refresh</button>
+    <div class="container">
+        <h1>Expense & Income Statistics</h1>
+        <div class="theme-toggle">
+            <button id="dark-mode-toggle">🌙 Dark Mode</button>
         </div>
-
-        <div class="rates">
-            <div class="rate-item"><strong>EUR</strong> <span id="eur">--</span></div>
-            <div class="rate-item"><strong>ILS</strong> <span id="ils">--</span></div>
-            <div class="rate-item"><strong>GBP</strong> <span id="gbp">--</span></div>
-            <div class="rate-item"><strong>USD</strong> <span id="usd">--</span></div>
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Monthly Overview</h3>
+                <canvas id="monthly-chart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Category Distribution</h3>
+                <canvas id="category-chart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Top Categories</h3>
+                <ul id="top-categories"></ul>
+            </div>
         </div>
+        <section class="exchange-rates-section" style="margin-top: 40px;">
+                <h2>Exchange Rates</h2>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <label for="base-currency" style="font-size: 0.95em;"></label>
+                <select id="base-currency" style="width: 70px; font-size: 0.95em; padding: 2px 6px;">
+                    <option value="ILS">ILS₪</option>
+                    <option value="EUR">EUR€</option>
+                    <option value="GBP">GBP£</option>
+                    <option value="USD">USD$</option>
+                </select>
+                <button id="refresh-rates">Reload</button>
+                <span id="exchange-rates-line" style="margin-left: 16px; font-size: 1.05em;"></span>
+            </div>
+            <div id="exchange-error" style="color: red; margin-top: 8px; display: none;"></div>
+        </section>
 
-        <div class="timestamp">Last updated: <span id="last-updated">--</span></div>
     </div>
-
-
-
-</div>
-
 </body>
 </html>
