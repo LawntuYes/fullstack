@@ -238,7 +238,12 @@ body.dark-mode, .dark-mode .transactions-list {
 .dark-mode h2 {
     color: #e0e0e0;
 }
-.dark-mode .container,
+.dark-mode .container
+{
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 .dark-mode .form-container,
 .dark-mode .summary{
     background-color: #2a2a2a;
@@ -441,17 +446,6 @@ td {
     color: #fff; /* White text for active link */
 }
 
-/* RESET */
-    /* * {
-        box-sizing: border-box;
-    }
-    body {
-        margin: 0;
-        padding: 40px;
-        background-color: #f8f9fb;
-        font-family: 'Segoe UI', sans-serif;
-        color: #333;
-    } */
 
     /* MAIN CONTAINER */
     .exchange-box {
@@ -507,32 +501,6 @@ td {
 
     .input-group button:hover {
         background-color: #3daace;
-    }
-
-    /* RATES CONTAINER */
-    .rates {
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-    }
-
-    /* INDIVIDUAL ROW */
-    .rate-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: 1px solid #ddd;
-        background-color: #f5f7fa;
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-size: 16px;
-    }
-
-    /* VALUE STYLING */
-    .rate-item span {
-        color: #4f7ee4;
-        font-weight: 600;
-        margin-left: 20px;
     }
 
     /* TIMESTAMP */
@@ -702,39 +670,7 @@ td {
         font-size: 12px;
     }
 }
-.donut-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    padding: 20px;
-    width: 260px;
-    text-align: center;
-    font-family: sans-serif;
-    margin: 20px auto;
-}
-
-.donut-total {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.donut-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 14px;
-    font-size: 0.9rem;
-    align-items: flex-start;
-}
-
-.dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 6px;
-}* {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -873,7 +809,7 @@ h2 {
 #inject-sample:hover {
     background-color: #45a049;
 }
-
+/* 
 .navbar {
     background-color: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(10px);
@@ -890,7 +826,7 @@ h2 {
     padding: 8px;
     display: flex;
     gap: 20px;
-}
+} */
 .exchange-rates-section select#base-currency {
     width: 70px;
     font-size: 1.15em;
