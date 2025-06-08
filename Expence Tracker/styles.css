@@ -957,3 +957,122 @@ body.dark-mode,
         margin-bottom: 0;
     }
 }
+
+
+/* About Me stuff */
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+}
+.pfp-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+#profile-pic {
+    width: 250px;
+    height: 250px;
+    border-radius: 10%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    align-self: center;
+}
+#about-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #1e1d1d;
+    margin-bottom: 20px;
+}
+
+#about-contact {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #1e1d1d;
+}
+#about-contact a {
+    color: #4caf50;
+    text-decoration: wavy;
+    transition: color 0.5s ease-out;
+}
+#about-contact a:hover {
+    color: #5745a0;
+    text-decoration: underline;
+    font-weight: bold;
+    transform: scale(1.1);
+}
+.dark-mode .about-container {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+}
+.dark-mode .pfp-container {
+    margin-right: 30px;
+}
+.dark-mode #profile-pic {
+    border-radius: 10%;
+    filter: brightness(0.8);
+}
+.dark-mode #about-description,
+.dark-mode #about-contact {
+    color: #e0e0e0;
+}
+/* Normal (light mode) styles */
+.skills-section {
+    max-width: 800px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.skills-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.badge {
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.badge:hover {
+    transform: scale(1.1);
+}
+
+/* Dark mode overrides */
+.dark-mode .skills-section h2 {
+    color: #f0f0f0;
+}
+.dark-mode .skills-section {
+    background-color: #2a2a2a;
+}
+
+.dark-mode .badge {
+    background: linear-gradient(135deg, #333 0%, #555 100%);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(255,255,255,0.05);
+}
