@@ -1,32 +1,53 @@
-// ✨ ייבוא firebase-config שמכיל את ההגדרות של Firebase
+// ✨ ייבוא auth, provider, ו-db מתוך firebase-config.js
 import { auth, provider, db } from "./firebase-config.js";
 
-// ✨ ייבוא של פעולות Authentication ו-Firestore
+// ✨ ייבוא פונקציות הנדרשות מ-Firebase SDKs
 import {
     signInWithPopup,
     onAuthStateChanged,
     signOut
-} from "firebase/auth";
-
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
     collection,
     addDoc,
     doc,
     deleteDoc,
     updateDoc,
-    onSnapshot
-} from "firebase/firestore";
+    onSnapshot,
+    query,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ✨ שליפת האלמנטים מה-HTML לפי ID
-const authDiv = document.getElementById("auth");
-const appDiv = document.getElementById("app");
+// ✨ ייבוא פונקציות עזר לעיצוב מטבע ותאריך
+import { formatCurrency, formatDate } from "./utils.js";
+
+// ✨ שליפת האלמנטים מה-HTML לפי ID/קלאס
+const googleLoginBtn = document.getElementById("google-login-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const appContentWrapper = document.getElementById("app-content-wrapper"); // ✨ ודא שזה נשלף כאן
+
 const form = document.getElementById("transaction-form");
 const descriptionEl = document.getElementById("description");
 const amountEl = document.getElementById("amount");
 const categoryEl = document.getElementById("category");
 const typeEl = document.getElementById("type");
 const transactionsBody = document.getElementById("transactions-body");
-const logoutBtn = document.getElementById("logout");
+
+const totalExpensesEl = document.getElementById('total-expenses');
+const totalIncomeEl = document.getElementById('total-income');
+const balanceEl = document.getElementById('balance');
+const searchInput = document.getElementById('search');
+const typeFilter = document.getElementById('type-filter');
+
+const modal = document.getElementById('edit-modal');
+const editForm = document.getElementById('edit-form');
+const closeModalBtn = document.getElementById('close-modal');
+const editIdEl = document.getElementById('edit-id');
+const editTypeEl = document.getElementById('edit-type');
+const editDescriptionEl = document.getElementById('edit-description');
+const editAmountEl = document.getElementById('edit-amount');
+const editCategoryEl = document.getElementById('edit-category');
+
 
 let currentUser = null;
 let unsubscribe = null;
@@ -35,317 +56,258 @@ let unsubscribe = null;
 onAuthStateChanged(auth, user => {
     if (user) {
         currentUser = user;
-        authDiv.style.display = "none";
-        appDiv.style.display = "block";
+        googleLoginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        if (appContentWrapper) { // ✨ ודא שהאלמנט קיים לפני הגישה ל-style
+            appContentWrapper.style.display = "block";
+        }
         loadExpenses();
     } else {
         currentUser = null;
-        authDiv.style.display = "block";
-        appDiv.style.display = "none";
+        googleLoginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        if (appContentWrapper) { // ✨ ודא שהאלמנט קיים לפני הגישה ל-style
+            appContentWrapper.style.display = "none";
+        }
         transactionsBody.innerHTML = "";
+        totalExpensesEl.textContent = formatCurrency(0);
+        totalIncomeEl.textContent = formatCurrency(0);
+        balanceEl.textContent = formatCurrency(0);
         if (unsubscribe) unsubscribe();
     }
 });
 
-// ✨ התחברות עם Google - נפתחת חלונית קופצת
-window.googleLogin = async () => {
+// ✨ פונקציית התחברות עם Google
+const googleLogin = async () => {
     try {
         await signInWithPopup(auth, provider);
     } catch (e) {
-        alert("Login failed: " + e.message);
+        console.error("Login failed:", e);
     }
 };
 
-// ✨ יציאה מהחשבון
-window.logout = async () => {
+// ✨ פונקציית יציאה מהחשבון
+const logout = async () => {
     await signOut(auth);
 };
 
-// ✨ מאזין לשליחה של הטופס - מוסיף הוצאה ל-Firestore
+// ✨ הוספת מאזיני אירועים לכפתורי ההתחברות והיציאה
+if (googleLoginBtn) {
+    googleLoginBtn.addEventListener('click', googleLogin);
+}
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', logout);
+}
+
+
+// ✨ מאזין לשליחה של הטופס - הוספת טרנזקציה חדשה ל-Firestore
 form.addEventListener("submit", async e => {
     e.preventDefault();
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.warn("No user logged in. Cannot add transaction.");
+        return;
+    }
 
     const data = {
-        description: descriptionEl.value,
+        description: descriptionEl.value.trim(),
         amount: parseFloat(amountEl.value),
         category: categoryEl.value,
         type: typeEl.value,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        userId: currentUser.uid
     };
 
+    if (!data.type || !data.description || isNaN(data.amount) || !data.category) {
+        console.error('Please provide valid inputs for all fields.');
+        return;
+    }
+
     try {
-        await addDoc(collection(db, `expenses/${currentUser.uid}/items`), data);
+        await addDoc(collection(db, `users/${currentUser.uid}/transactions`), data);
         form.reset();
     } catch (e) {
-        alert("Add failed: " + e.message);
+        console.error("Error adding document: ", e);
     }
 });
 
-// ✨ עריכת הוצאה קיימת לפי ID
-window.editTransaction = async (id, old) => {
-    const newDesc = prompt("Description:", old.description);
-    const newAmt = prompt("Amount:", old.amount);
-    const newCat = prompt("Category:", old.category);
-    const newType = prompt("Type (expense/income):", old.type);
+// ✨ פתיחת מודל העריכה עם נתוני הטרנזקציה
+transactionsBody.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('edit-btn')) {
+        const docId = e.target.dataset.id;
+        if (!currentUser || !docId) return;
 
-    if (newDesc && newAmt && newCat && newType && currentUser) {
-        await updateDoc(doc(db, `expenses/${currentUser.uid}/items`, id), {
-            description: newDesc,
-            amount: parseFloat(newAmt),
-            category: newCat,
-            type: newType
-        });
+        try {
+            const docRef = doc(db, `users/${currentUser.uid}/transactions`, docId);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const tx = docSnap.data();
+                editIdEl.value = docId;
+                editTypeEl.value = tx.type;
+                editDescriptionEl.value = tx.description;
+                editAmountEl.value = tx.amount;
+                editCategoryEl.value = tx.category;
+                modal.classList.remove('hidden');
+            } else {
+                console.warn("Transaction not found for editing.");
+            }
+        } catch (error) {
+            console.error("Error fetching document for edit:", error);
+        }
     }
-};
+});
 
-// ✨ מחיקת הוצאה לפי ID
-window.deleteTransaction = async id => {
-    if (currentUser) {
-        await deleteDoc(doc(db, `expenses/${currentUser.uid}/items`, id));
+// ✨ סגירת מודל העריכה
+closeModalBtn.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});
+
+// ✨ שמירת טרנזקציה ערוכה ל-Firestore
+editForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+        console.warn("No user logged in. Cannot edit transaction.");
+        return;
     }
-};
 
-// ✨ שליפה ועדכון רשימת ההוצאות למשתמש המחובר
+    const docId = editIdEl.value;
+    const updatedData = {
+        type: editTypeEl.value,
+        description: editDescriptionEl.value.trim(),
+        amount: parseFloat(editAmountEl.value),
+        category: editCategoryEl.value,
+    };
+
+    if (!updatedData.type || !updatedData.description || isNaN(updatedData.amount) || !updatedData.category) {
+        console.error('Please provide valid inputs for all fields in edit form.');
+        return;
+    }
+
+    try {
+        await updateDoc(doc(db, `users/${currentUser.uid}/transactions`, docId), updatedData);
+        modal.classList.add('hidden');
+    } catch (e) {
+        console.error("Error updating document: ", e);
+    }
+});
+
+// ✨ מחיקת הוצאה מ-Firestore
+transactionsBody.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('delete-btn')) {
+        const docId = e.target.dataset.id;
+        if (!currentUser || !docId) return;
+
+        if (confirm("Are you sure you want to delete this transaction?")) {
+            try {
+                await deleteDoc(doc(db, `users/${currentUser.uid}/transactions`, docId));
+            } catch (e) {
+                console.error("Error deleting document: ", e);
+            }
+        }
+    }
+});
+
+
+// ✨ שליפה ועדכון רשימת ההוצאות למשתמש המחובר בזמן אמת (onSnapshot)
 function loadExpenses() {
-    const q = collection(db, `expenses/${currentUser.uid}/items`);
-    unsubscribe = onSnapshot(q, snapshot => {
+    if (!currentUser) {
+        console.warn("loadExpenses called without a current user.");
+        return;
+    }
+    const q = query(
+        collection(db, `users/${currentUser.uid}/transactions`)
+    );
+
+    if (unsubscribe) unsubscribe();
+
+    unsubscribe = onSnapshot(q, (snapshot) => {
         transactionsBody.innerHTML = "";
+        let totalExpenses = 0;
+        let totalIncome = 0;
+
         snapshot.docs.forEach(docSnap => {
             const item = docSnap.data();
+            const docId = docSnap.id;
+            
+            if (item.type === 'expense') {
+                totalExpenses += item.amount;
+            } else if (item.type === 'income') {
+                totalIncome += item.amount;
+            }
+
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${new Date(item.timestamp).toLocaleDateString()}</td>
-                <td>${item.type}</td>
+                <td>${formatDate(new Date(item.timestamp))}</td>
+                <td class="${item.type}">${item.type[0].toUpperCase() + item.type.slice(1)}</td>
                 <td>${item.description}</td>
-                <td>₪${item.amount.toFixed(2)}</td>
-                <td>${item.category}</td>
+                <td class="${item.type}">${formatCurrency(item.amount)}</td>
+                <td>${item.category[0].toUpperCase() + item.category.slice(1)}</td>
                 <td>
-                    <button onclick="editTransaction('${docSnap.id}', ${JSON.stringify(item)})">✏️</button>
-                    <button onclick="deleteTransaction('${docSnap.id}')">🗑️</button>
+                    <div class="action-buttons">
+                        <button class="edit-btn" data-id="${docId}">Edit</button>
+                        <button class="delete-btn" data-id="${docId}">Delete</button>
+                    </div>
                 </td>
             `;
             transactionsBody.appendChild(tr);
         });
+
+        totalExpensesEl.textContent = formatCurrency(totalExpenses);
+        totalIncomeEl.textContent = formatCurrency(totalIncome);
+        balanceEl.textContent = formatCurrency(totalIncome - totalExpenses);
+
+        filterAndRender();
+    }, (error) => {
+        console.error("Error fetching documents:", error);
     });
 }
 
-
-class Transaction{
-    static _lastId = 0
-
-    constructor(type, description, amount, category, date = new Date()){
-        this.id = ++Transaction._lastId; //כדי שהתז כל פעם יגדל באחד
-        this.type = type;
-        this.description = description;
-        this.amount = amount;
-        this.category = category;
-        this.date = date;
-    }
-
-    toObject(){
-        return{
-        id: this.id,
-        type: this.type,
-        description: this.description,
-        amount: this.amount,
-        category: this.category,
-        date: this.date.toISOString(),  
-        };
-    }
-}
-
-class TransactionManager {
-    constructor() {
-        this.transactions = [];
-    }
-
-    add(tx) {
-        this.transactions.push(tx);
-        this.addExpense();
-        this.uppdateSummary();
-        console.log('New transaction added: ', tx.toObject());
-    }
-    
-
-    remove(id){
-        this.transactions = this.transactions.filter((tx) => tx.id !== id);
-        this.addExpense(); // חדש
-        this.uppdateSummary();
-    }
-
-    uppdateSummary(){
-        const totalExpenses= this.transactions.filter((tx)=> tx.type === 'expense')
-        .reduce((acc,curr)=> acc+curr.amount, 0);
-        
-        const totalIncome= this.transactions.filter((tx)=> tx.type === 'income')
-        .reduce((acc,curr)=> acc+curr.amount, 0);
-
-        const balance = totalIncome - totalExpenses;
-
-        document.getElementById('total-expenses').textContent = formatCurrency(totalExpenses);
-        document.getElementById('total-income').textContent = formatCurrency(totalIncome);
-        document.getElementById('balance').textContent = formatCurrency(balance);
-
-
-    }
-//saves to local storage
-    // saveToLocalStorage() {
-    //     localStorage.setItem('transactions', JSON.stringify(this.transactions.map(tx => tx.toObject())));
-    // }
-    
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('transaction-form');
-    const manager = new TransactionManager();
-    const transactionBody = document.getElementById('transactions-body');
-
-    loadExpenses();
-
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault()//מונע את הריפרש של העמוד
-
-        const type = form.querySelector('#type').value;
-        const description = form.querySelector('#description').value.trim();
-        const category = form.querySelector('#category').value;
-        const amountVal = form.querySelector('#amount').value;
-        const amount = parseFloat(amountVal);
-
-        if(!type || !description || isNaN(amount) || !category){
-            console.error('Please provide a valid inputs');
-            return;
-        }
-        
-        const tx = new Transaction(type,description,amount,category);
-        manager.add(tx);
-        appendTransactionToTable(tx);
-        form.reset();
-    });
-
-    transactionBody.addEventListener('click', (e) => {
-        if(e.target.classList.contains('delete-btn')){
-            const id = Number(e.target.dataset.index)
-            manager.remove(id);
-            e.target.closest('tr').remove();
-        }
-    });
-
-    function appendTransactionToTable(tx){
-        const tr = document.createElement('tr')
-    
-        tr.innerHTML =`
-        <td>${formatDate(tx.date)}</td>
-        <td class=${tx.type}>${tx.type[0].toUpperCase() + tx.type.slice(1)}</td>
-        <td>${tx.description}</td>
-        <td class= ${tx.type}>${formatCurrency(tx.amount)}</td>
-        <td>${tx.category[0].toUpperCase() + tx.category.slice(1)}</td>
-        <td>
-            <div class="action-buttons">
-                <button class="edit-btn" data-index=${tx.id}>Edit</button>
-                <button class="delete-btn" data-index=${tx.id}>Delete</button>
-            </div>
-        </td>`;
-
-        transactionBody.appendChild(tr);
-    }
-    const searchInput = document.getElementById('search');
-    const typeFilter = document.getElementById('type-filter');
-
-
-    searchInput.addEventListener('input', filterAndRender);
-    typeFilter.addEventListener('change', filterAndRender);
-
-    function filterAndRender() {
+// ✨ פונקציות הסינון והחיפוש
+function filterAndRender() {
     const searchText = searchInput.value.trim().toLowerCase();
     const selectedType = typeFilter.value;
+    
+    Array.from(transactionsBody.children).forEach(row => {
+        const descriptionCell = row.children[2].textContent.toLowerCase();
+        const typeCell = row.children[1].textContent.toLowerCase();
 
-    // Clear existing table
-    transactionBody.innerHTML = '';
+        const matchesType = selectedType === 'all' || typeCell === selectedType;
+        const matchesSearch = descriptionCell.includes(searchText);
 
-    const filtered = manager.transactions.filter(tx => {
-        const matchesType = selectedType === 'all' || tx.type === selectedType;
-        const matchesSearch = tx.description.toLowerCase().includes(searchText);
-        return matchesType && matchesSearch;
+        if (matchesType && matchesSearch) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
     });
+}
 
-    filtered.forEach(tx => appendTransactionToTable(tx));
-    }
+// ✨ מאזינים לאירועי שינוי בתיבת החיפוש ובפילטר
+searchInput.addEventListener('input', filterAndRender);
+typeFilter.addEventListener('change', filterAndRender);
+
+
+// ✨ קוד לניהול מצב כהה/בהיר - נשאר ללא שינוי מהקובץ המקורי שלך
+document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.getElementById('dark-mode-toggle');
     const body = document.body;
 
-    // 🎨 Dark Mode Toggle
-    const darkModeBtn = document.getElementById("dark-mode-toggle");
-
-    if (darkModeBtn) {
-        // טען נושא מה-localStorage
-        if (localStorage.getItem("theme") === "dark") {
-            document.body.classList.add("dark");
-        }
-
-        darkModeBtn.addEventListener("click", () => {
-            document.body.classList.toggle("dark");
-
-            // שמור את המצב
-            if (document.body.classList.contains("dark")) {
-                localStorage.setItem("theme", "dark");
-            } else {
-                localStorage.setItem("theme", "light");
-            }
-        });
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        toggleButton.textContent = '☀️ Light Mode';
+    } else {
+        body.classList.add('light-mode');
+        toggleButton.textContent = '🌙 Dark Mode';
     }
 
+    toggleButton.addEventListener('click', () => {
+        const isDark = body.classList.contains('dark-mode');
 
-    
-    //edit button
-    const modal = document.getElementById('edit-modal');
-    const editForm = document.getElementById('edit-form');
-    const closeModalBtn = document.getElementById('close-modal');
+        body.classList.toggle('dark-mode', !isDark);
+        body.classList.toggle('light-mode', isDark);
 
-    // Open modal with values
-    transactionBody.addEventListener('click', (e) => {
-        if (e.target.classList.contains('edit-btn')) {
-            const id = Number(e.target.dataset.index);
-            const tx = manager.transactions.find(t => t.id === id);
-
-            if (tx) {
-                document.getElementById('edit-id').value = tx.id;
-                document.getElementById('edit-type').value = tx.type;
-                document.getElementById('edit-description').value = tx.description;
-                document.getElementById('edit-amount').value = tx.amount;
-                document.getElementById('edit-category').value = tx.category;
-
-                modal.classList.remove('hidden');
-            }
-        }
+        toggleButton.textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
     });
-
-    // Close modal
-    closeModalBtn.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
-
-    // Save edited transaction
-    editForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const id = Number(document.getElementById('edit-id').value);
-        const updatedTx = manager.transactions.find(t => t.id === id);
-
-        if (updatedTx) {
-            updatedTx.type = document.getElementById('edit-type').value;
-            updatedTx.description = document.getElementById('edit-description').value;
-            updatedTx.amount = parseFloat(document.getElementById('edit-amount').value);
-            updatedTx.category = document.getElementById('edit-category').value;
-
-            manager.addExpense();
-            manager.uppdateSummary();
-            filterAndRender(); // re-render filtered list
-            modal.classList.add('hidden');
-        }
-    });
-
-
-
 });

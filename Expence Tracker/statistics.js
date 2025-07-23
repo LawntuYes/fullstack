@@ -1,4 +1,4 @@
-const API_KEY = "";
+const API_KEY = "2e96e613b6115530865c7d8e";
 const BASE_URL = 'https://v6.exchangerate-api.com/v6';
 
 class CurrencyManager {

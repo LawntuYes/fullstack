@@ -6,161 +6,54 @@
     <script src="script.js" type="module"></script>
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCy_VmesGYhb2IW4uiV3ExKVB_wZG6Pol8",
-            authDomain: "expensetracker-4d53d.firebaseapp.com",
-            projectId: "expensetracker-4d53d",
-            storageBucket: "expensetracker-4d53d.firebasestorage.app",
-            messagingSenderId: "762926310676",
-            appId: "1:762926310676:web:e4c4d24fc3c07ca3b5ce01"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        window.auth = getAuth(app);
-        window.provider = new GoogleAuthProvider();
-        window.db = getFirestore(app);
-    </script>
-
-    
-
 </head>
 <body>
     
-
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-link active">Transactions</a>
             <a href="statistics.html" class="nav-link">Statistics</a>
             <a href="about.html" class="nav-link">About Me</a>
+            
+            <!-- ✨ ודא שבלוק הכפתורים הזה קיים ב-NAVBAR שלך -->
+            <div class="auth-buttons-container">
+                <button id="google-login-btn" class="nav-button">Sign in with Google</button>
+                <button id="logout-btn" class="nav-button" style="display:none;">Logout</button>
+            </div>
         </div>
     </nav>
-    <div id="auth">
-        <button onclick="googleLogin()">Sign in with Google</button>
-    </div>
-    <div id="app" style="display:none;">
-        <button id="logout" onclick="logout()">Logout</button>
-    </div>
-
     <div class="container">
         <h1>Expense & Income Tracker</h1>
         <div class="theme-toggle">
             <button id="dark-mode-toggle">🌙 Dark Mode</button>
         </div>
     
-    <div class="form-container">
-        <form id="transaction-form">
-            <div class="form-group">
-                <label for="type">Type:</label>
-                <select id="type" required>
-                    <option value="" disabled selected>Select Type</option>
-
-                    <option value="expense">Expense</option>
-                    <option value="income">Income</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" id="description" required>
-            </div>
-            <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="number" id="amount" required min="0" step="0.5">
-            </div>
-
-            <div class="form-group">
-                <label for="category">Category:</label>
-                <select id="category" required>
-                    <option value="" disabled selected>Select Category</option>
-
-                    <option value="food">Food</option>
-                    <option value="transportation">Transportation</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="bills">Bills</option>
-                    <option value="salary">Salary</option>
-                    <option value="investment">Investment</option>
-                    <option value="other">Other</option>
-
-                    
-                </select>
-            </div>
-
-            <button type="submit">Add Transaction</button>
-        </form>
-    </div>
-    </div>
-
-    <div class="summary">
-        <h2>Summary</h2>
-        <div class="total-expenses">
-            <span>Total Expenses:</span>
-            <span id="total-expenses">₪0.00</span>
-        </div>
-        <div class="total-income">
-            <span>Total Income:</span>
-            <span id="total-income">₪0.00</span>
-        </div>
-        <div class="balance">
-            <span>Balance:</span>
-            <span id="balance">₪0.00</span>
-        </div>
-    </div>
-    <div class="transactions-list">
-        <h2>Transaction History</h2>
-        <div class="searchBox">
-            <input type="text" id="search" placeholder="Search by description...">
-            <select id="type-filter">
-                <option value="all">All</option>
-                <option value="expense">Expense</option>
-                <option value="income">Income</option>
-            </select>
-        </div>
-        <table id="transactions-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Category</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="transactions-body"></tbody>
-        </table>
-        <ul id="expenseList"></ul>
-    </div>
-    <div id="edit-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Edit Transaction</h3>
-            <form id="edit-form">
-                <input type="hidden" id="edit-id">
+    <!-- ✨ שינוי קריטי: ודא שה-div הזה עוטף את כל תוכן האפליקציה שלך -->
+    <div id="app-content-wrapper"> 
+        <div class="form-container">
+            <form id="transaction-form">
                 <div class="form-group">
-                    <label for="edit-type">Type</label>
-                    <select id="edit-type" required>
+                    <label for="type">Type:</label>
+                    <select id="type" required>
+                        <option value="" disabled selected>Select Type</option>
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                     </select>
                 </div>
-                
-                
+
                 <div class="form-group">
-                    <label for="edit-description">Description</label>
-                    <input type="text" id="edit-description" required>
+                    <label for="description">Description</label>
+                    <input type="text" id="description" required>
                 </div>
                 <div class="form-group">
-                    <label for="edit-amount">Amount</label>
-                    <input type="number" id="edit-amount" required min="0" step="0.5">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" required min="0" step="0.5">
                 </div>
+
                 <div class="form-group">
-                    <label for="edit-category">Category</label>
-                    <select id="edit-category" required>
+                    <label for="category">Category:</label>
+                    <select id="category" required>
+                        <option value="" disabled selected>Select Category</option>
                         <option value="food">Food</option>
                         <option value="transportation">Transportation</option>
                         <option value="entertainment">Entertainment</option>
@@ -170,15 +63,93 @@
                         <option value="other">Other</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <button type="submit" id="save-edit">Save Changes</button>
-                    <button type="button" id="close-modal">Cancel</button>
-                </div>
+
+                <button type="submit">Add Transaction</button>
             </form>
         </div>
-    </div>
 
-    
+        <div class="summary">
+            <h2>Summary</h2>
+            <div class="total-expenses">
+                <span>Total Expenses:</span>
+                <span id="total-expenses">₪0.00</span>
+            </div>
+            <div class="total-income">
+                <span>Total Income:</span>
+                <span id="total-income">₪0.00</span>
+            </div>
+            <div class="balance">
+                <span>Balance:</span>
+                <span id="balance">₪0.00</span>
+            </div>
+        </div>
+        <div class="transactions-list">
+            <h2>Transaction History</h2>
+            <div class="searchBox">
+                <input type="text" id="search" placeholder="Search by description...">
+                <select id="type-filter">
+                    <option value="all">All</option>
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+            </div>
+            <table id="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-body"></tbody>
+            </table>
+            <ul id="expenseList"></ul>
+        </div>
+        <div id="edit-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Edit Transaction</h3>
+                <form id="edit-form">
+                    <input type="hidden" id="edit-id">
+                    <div class="form-group">
+                        <label for="edit-type">Type</label>
+                        <select id="edit-type" required>
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-description">Description</label>
+                        <input type="text" id="edit-description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-amount">Amount</label>
+                        <input type="number" id="edit-amount" required min="0" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-category">Category</label>
+                        <select id="edit-category" required>
+                            <option value="food">Food</option>
+                            <option value="transportation">Transportation</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="bills">Bills</option>
+                            <option value="salary">Salary</option>
+                            <option value="investment">Investment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="save-edit">Save Changes</button>
+                        <button type="button" id="close-modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> <!-- סוף app-content-wrapper -->
+
+    </div> <!-- סוף container -->
     
 </body>
 </html>

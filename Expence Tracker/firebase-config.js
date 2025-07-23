@@ -1,19 +1,19 @@
 // firebase-config.js
 
-// ✨ ייבוא מהספריות של Firebase
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+// ✨ ייבוא מהספריות של Firebase מכתובות CDN
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ✨ זה האובייקט שהעתקת מפיירבייס
+// ✨ זה האובייקט שהעתקת מפיירבייס - ודא שהוא מעודכן עם הפרטים שלך
 const firebaseConfig = {
-    apiKey: "AIzaSyCy_VmesGYhb2IW4uiV3ExKVB_wZG6Pol8",
-    authDomain: "expensetracker-4d53d.firebaseapp.com",
-    projectId: "expensetracker-4d53d",
+    apiKey: "AIzaSyCy_VmesGYhb2IW4uiV3ExKVB_wZG6Pol8", // ✨ ודא שזה המפתח שלך
+    authDomain: "expensetracker-4d53d.firebaseapp.com", // ✨ ודא שזה הדומיין שלך
+    projectId: "expensetracker-4d53d", // ✨ ודא שזה ה-ID של הפרויקט שלך
     storageBucket: "expensetracker-4d53d.appspot.com",
     messagingSenderId: "762926310676",
     appId: "1:762926310676:web:e4c4d24fc3c07ca3b5ce01",
-    measurementId: "G-G6SVK4450D"
+    measurementId: "G-G6SVK4450D" // אם יש לך
 };
 
 // ✨ יצירת האפליקציה
