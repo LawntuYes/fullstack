@@ -1,4 +1,91 @@
 import{formatCurrency,formatDate} from './utils.js';
+import { auth, provider, db } from "./firebase-config.js";
+import {
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut
+} from "firebase/auth";
+import {
+    collection,
+    addDoc,
+    doc,
+    deleteDoc,
+    updateDoc,
+    onSnapshot
+} from "firebase/firestore";
+
+const authDiv = document.getElementById("auth");
+const appDiv = document.getElementById("app");
+const expenseList = document.getElementById("expenseList");
+const descriptionInput = document.getElementById("description");
+const amountInput = document.getElementById("amount");
+const logoutBtn = document.getElementById("logout");
+
+let currentUser = null;
+
+onAuthStateChanged(auth, user => {
+    if (user) {
+        currentUser = user;
+        authDiv.style.display = "none";
+        appDiv.style.display = "block";
+        loadExpenses();
+    } else {
+        currentUser = null;
+        authDiv.style.display = "block";
+        appDiv.style.display = "none";
+        expenseList.innerHTML = "";
+    }
+});
+
+window.googleLogin = async function () {
+    try {
+        await signInWithPopup(auth, provider);
+    } catch (err) {
+        alert("Login failed: " + err.message);
+    }
+};
+
+window.logout = async function () {
+    await signOut(auth);
+};
+
+window.addExpense = async function () {
+    const desc = descriptionInput.value;
+    const amt = amountInput.value;
+    if (!desc || !amt || !currentUser) return;
+
+    try {
+        await addDoc(collection(db, `expenses/${currentUser.uid}/items`), {
+        description: desc,
+        amount: amt,
+        timestamp: Date.now()
+        });
+        descriptionInput.value = "";
+        amountInput.value = "";
+    } catch (err) {
+        alert("Error adding expense: " + err.message);
+    }
+};
+
+
+window.deleteExpense = async function (id) {
+    try {
+        await deleteDoc(doc(db, `expenses/${currentUser.uid}/items`, id));
+    } catch (err) {
+        alert("Delete failed: " + err.message);
+    }
+};
+
+window.editExpensePrompt = function (id, oldDesc, oldAmt) {
+    const newDesc = prompt("Edit description", oldDesc);
+    const newAmt = prompt("Edit amount", oldAmt);
+    if (newDesc && newAmt) {
+        updateDoc(doc(db, `expenses/${currentUser.uid}/items`, id), {
+        description: newDesc,
+        amount: newAmt
+        });
+    }
+};
 
 
 
@@ -33,7 +120,7 @@ class TransactionManager {
 
     add(tx) {
         this.transactions.push(tx);
-        this.saveToLocalStorage();
+        this.addExpense();
         this.uppdateSummary();
         console.log('New transaction added: ', tx.toObject());
     }
@@ -41,7 +128,7 @@ class TransactionManager {
 
     remove(id){
         this.transactions = this.transactions.filter((tx) => tx.id !== id);
-        this.saveToLocalStorage(); // חדש
+        this.addExpense(); // חדש
         this.uppdateSummary();
     }
 
@@ -72,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const manager = new TransactionManager();
     const transactionBody = document.getElementById('transactions-body');
 
-    loadFromLocalStorage();
+    loadExpenses();
 
 
     form.addEventListener('submit', (e) => {
@@ -123,29 +210,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    function loadFromLocalStorage() {
-        const stored = localStorage.getItem('transactions');
-        if (stored) {
-            const data = JSON.parse(stored);
-            
-            // קובע את האידי האחרון
-            Transaction._lastId = Math.max(...data.map(tx => tx.id), 0);
-    
-            // מוסיף לרשימה ידנית, לא דרך manager.add()
-            manager.transactions = data.map(obj => new Transaction(
-                obj.type,
-                obj.description,
-                parseFloat(obj.amount),
-                obj.category,
-                new Date(obj.date)
-            ));
-    
-            // מוסיף לטבלה
-            manager.transactions.forEach(tx => appendTransactionToTable(tx));
-            
-            // סיכום מחדש
-            manager.uppdateSummary();
-        }
+    function loadExpenses() {
+        const q = collection(db, `expenses/${currentUser.uid}/items`);
+        onSnapshot(q, snapshot => {
+            expenseList.innerHTML = "";
+            snapshot.forEach(docSnap => {
+            const item = docSnap.data();
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ${item.description}: $${item.amount}
+                <button onclick="deleteExpense('${docSnap.id}')">🗑️</button>
+                <button onclick="editExpensePrompt('${docSnap.id}', '${item.description}', '${item.amount}')">✏️</button>
+            `;
+            expenseList.appendChild(li);
+            });
+        });
     }
     const searchInput = document.getElementById('search');
     const typeFilter = document.getElementById('type-filter');
@@ -192,6 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButton.textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
         localStorage.setItem('theme', isDark ? 'light' : 'dark');
     });
+
+    
     //edit button
     const modal = document.getElementById('edit-modal');
     const editForm = document.getElementById('edit-form');
@@ -233,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updatedTx.amount = parseFloat(document.getElementById('edit-amount').value);
             updatedTx.category = document.getElementById('edit-category').value;
 
-            manager.saveToLocalStorage();
+            manager.addExpense();
             manager.uppdateSummary();
             filterAndRender(); // re-render filtered list
             modal.classList.add('hidden');
