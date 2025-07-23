@@ -1,10 +1,13 @@
-import{formatCurrency,formatDate} from './utils.js';
+// ✨ ייבוא firebase-config שמכיל את ההגדרות של Firebase
 import { auth, provider, db } from "./firebase-config.js";
+
+// ✨ ייבוא של פעולות Authentication ו-Firestore
 import {
     signInWithPopup,
     onAuthStateChanged,
     signOut
 } from "firebase/auth";
+
 import {
     collection,
     addDoc,
@@ -14,15 +17,21 @@ import {
     onSnapshot
 } from "firebase/firestore";
 
+// ✨ שליפת האלמנטים מה-HTML לפי ID
 const authDiv = document.getElementById("auth");
 const appDiv = document.getElementById("app");
-const expenseList = document.getElementById("expenseList");
-const descriptionInput = document.getElementById("description");
-const amountInput = document.getElementById("amount");
+const form = document.getElementById("transaction-form");
+const descriptionEl = document.getElementById("description");
+const amountEl = document.getElementById("amount");
+const categoryEl = document.getElementById("category");
+const typeEl = document.getElementById("type");
+const transactionsBody = document.getElementById("transactions-body");
 const logoutBtn = document.getElementById("logout");
 
 let currentUser = null;
+let unsubscribe = null;
 
+// ✨ מאזין לשינויים במצב ההתחברות של המשתמש
 onAuthStateChanged(auth, user => {
     if (user) {
         currentUser = user;
@@ -33,60 +42,93 @@ onAuthStateChanged(auth, user => {
         currentUser = null;
         authDiv.style.display = "block";
         appDiv.style.display = "none";
-        expenseList.innerHTML = "";
+        transactionsBody.innerHTML = "";
+        if (unsubscribe) unsubscribe();
     }
 });
 
-window.googleLogin = async function () {
+// ✨ התחברות עם Google - נפתחת חלונית קופצת
+window.googleLogin = async () => {
     try {
         await signInWithPopup(auth, provider);
-    } catch (err) {
-        alert("Login failed: " + err.message);
+    } catch (e) {
+        alert("Login failed: " + e.message);
     }
 };
 
-window.logout = async function () {
+// ✨ יציאה מהחשבון
+window.logout = async () => {
     await signOut(auth);
 };
 
-window.addExpense = async function () {
-    const desc = descriptionInput.value;
-    const amt = amountInput.value;
-    if (!desc || !amt || !currentUser) return;
+// ✨ מאזין לשליחה של הטופס - מוסיף הוצאה ל-Firestore
+form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!currentUser) return;
 
-    try {
-        await addDoc(collection(db, `expenses/${currentUser.uid}/items`), {
-        description: desc,
-        amount: amt,
+    const data = {
+        description: descriptionEl.value,
+        amount: parseFloat(amountEl.value),
+        category: categoryEl.value,
+        type: typeEl.value,
         timestamp: Date.now()
-        });
-        descriptionInput.value = "";
-        amountInput.value = "";
-    } catch (err) {
-        alert("Error adding expense: " + err.message);
-    }
-};
+    };
 
-
-window.deleteExpense = async function (id) {
     try {
-        await deleteDoc(doc(db, `expenses/${currentUser.uid}/items`, id));
-    } catch (err) {
-        alert("Delete failed: " + err.message);
+        await addDoc(collection(db, `expenses/${currentUser.uid}/items`), data);
+        form.reset();
+    } catch (e) {
+        alert("Add failed: " + e.message);
     }
-};
+});
 
-window.editExpensePrompt = function (id, oldDesc, oldAmt) {
-    const newDesc = prompt("Edit description", oldDesc);
-    const newAmt = prompt("Edit amount", oldAmt);
-    if (newDesc && newAmt) {
-        updateDoc(doc(db, `expenses/${currentUser.uid}/items`, id), {
-        description: newDesc,
-        amount: newAmt
+// ✨ עריכת הוצאה קיימת לפי ID
+window.editTransaction = async (id, old) => {
+    const newDesc = prompt("Description:", old.description);
+    const newAmt = prompt("Amount:", old.amount);
+    const newCat = prompt("Category:", old.category);
+    const newType = prompt("Type (expense/income):", old.type);
+
+    if (newDesc && newAmt && newCat && newType && currentUser) {
+        await updateDoc(doc(db, `expenses/${currentUser.uid}/items`, id), {
+            description: newDesc,
+            amount: parseFloat(newAmt),
+            category: newCat,
+            type: newType
         });
     }
 };
 
+// ✨ מחיקת הוצאה לפי ID
+window.deleteTransaction = async id => {
+    if (currentUser) {
+        await deleteDoc(doc(db, `expenses/${currentUser.uid}/items`, id));
+    }
+};
+
+// ✨ שליפה ועדכון רשימת ההוצאות למשתמש המחובר
+function loadExpenses() {
+    const q = collection(db, `expenses/${currentUser.uid}/items`);
+    unsubscribe = onSnapshot(q, snapshot => {
+        transactionsBody.innerHTML = "";
+        snapshot.docs.forEach(docSnap => {
+            const item = docSnap.data();
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${new Date(item.timestamp).toLocaleDateString()}</td>
+                <td>${item.type}</td>
+                <td>${item.description}</td>
+                <td>₪${item.amount.toFixed(2)}</td>
+                <td>${item.category}</td>
+                <td>
+                    <button onclick="editTransaction('${docSnap.id}', ${JSON.stringify(item)})">✏️</button>
+                    <button onclick="deleteTransaction('${docSnap.id}')">🗑️</button>
+                </td>
+            `;
+            transactionsBody.appendChild(tr);
+        });
+    });
+}
 
 
 class Transaction{
@@ -148,9 +190,9 @@ class TransactionManager {
 
     }
 //saves to local storage
-    saveToLocalStorage() {
-        localStorage.setItem('transactions', JSON.stringify(this.transactions.map(tx => tx.toObject())));
-    }
+    // saveToLocalStorage() {
+    //     localStorage.setItem('transactions', JSON.stringify(this.transactions.map(tx => tx.toObject())));
+    // }
     
 }
 
@@ -208,24 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         transactionBody.appendChild(tr);
     }
-
-
-    function loadExpenses() {
-        const q = collection(db, `expenses/${currentUser.uid}/items`);
-        onSnapshot(q, snapshot => {
-            expenseList.innerHTML = "";
-            snapshot.forEach(docSnap => {
-            const item = docSnap.data();
-            const li = document.createElement("li");
-            li.innerHTML = `
-                ${item.description}: $${item.amount}
-                <button onclick="deleteExpense('${docSnap.id}')">🗑️</button>
-                <button onclick="editExpensePrompt('${docSnap.id}', '${item.description}', '${item.amount}')">✏️</button>
-            `;
-            expenseList.appendChild(li);
-            });
-        });
-    }
     const searchInput = document.getElementById('search');
     const typeFilter = document.getElementById('type-filter');
 
@@ -251,26 +275,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.getElementById('dark-mode-toggle');
     const body = document.body;
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        toggleButton.textContent = '☀️ Light Mode';
-    } else {
-        body.classList.add('light-mode');
-        toggleButton.textContent = '🌙 Dark Mode';
+    // 🎨 Dark Mode Toggle
+    const darkModeBtn = document.getElementById("dark-mode-toggle");
+
+    if (darkModeBtn) {
+        // טען נושא מה-localStorage
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+        }
+
+        darkModeBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+
+            // שמור את המצב
+            if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+            } else {
+                localStorage.setItem("theme", "light");
+            }
+        });
     }
 
-    // Toggle mode
-    toggleButton.addEventListener('click', () => {
-        const isDark = body.classList.contains('dark-mode');
-
-        body.classList.toggle('dark-mode', !isDark);
-        body.classList.toggle('light-mode', isDark);
-
-        toggleButton.textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
-        localStorage.setItem('theme', isDark ? 'light' : 'dark');
-    });
 
     
     //edit button
