@@ -630,3 +630,5 @@ NODEJS/node_modules/wrappy/LICENSE
 NODEJS/node_modules/wrappy/package.json
 NODEJS/node_modules/wrappy/README.md
 NODEJS/node_modules/wrappy/wrappy.js
+NODEJS/.env
+NODEJS/package-lock.json
