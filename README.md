@@ -1,1 +1,1 @@
-My Exchange website
+My FullStack studies from college
