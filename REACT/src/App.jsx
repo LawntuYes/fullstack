@@ -3,6 +3,7 @@ import './App.css'
 import { useState, useEffect } from 'react'
 import { HATS } from './config';
 import { getPosts } from './api';
+import { Post } from './Post';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -29,6 +30,11 @@ function App() {
       <div style={{ display: "flex" }}>
         {HATS.map((hat) => (
           <Button hat={hat} />
+        ))}
+      </div>
+      <div>
+        {posts.map((post) => (
+          <Post post={post} key={post.id} />
         ))}
       </div>
     </>
