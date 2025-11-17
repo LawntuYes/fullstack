@@ -1,13 +1,23 @@
 import { Button } from './Button';
 import './App.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { HATS } from './config';
+import { getPosts } from './api';
 
 function App() {
   const [count, setCount] = useState(0)
   const [hidden, setHidden] = useState(false)
+  const [posts, setPosts] = useState([]);
 
+
+  console.log(posts);
   console.log("Render");
+
+
+  useEffect(() =>  {
+    getPosts().then(data => setPosts(data));
+  }, []);
+  
 
   return (
     <>
