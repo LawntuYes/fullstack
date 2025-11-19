@@ -12,10 +12,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  
 
 
-  useEffect(() =>  {
+
+  useEffect(() => {
     setLoading(true);
     getPosts()
       .then(data => setPosts(data))
@@ -26,28 +26,28 @@ function App() {
   if (error) {
     return <div>Error: Please try again... 🙏🙏🙏🙏🙏</div>;
   }
-  
+
 
   return (
     <>
       {!hidden && <h1>Welcome {count}</h1>}
 
-          <button onClick={() => setCount(count + 1)}>Click</button>
+      <button onClick={() => setCount(count + 1)}>Click</button>
 
-          <button onClick={() => setHidden(h => !h)}>{hidden ? 'show' : 'hidden'}</button>
+      <button onClick={() => setHidden(h => !h)}>{hidden ? 'show' : 'hidden'}</button>
 
-          {loading ? (
-            <div style={{ marginTop: 12 }}>
-              <p>Loading posts…</p>
-              <progress />
-            </div>
-          ) : (
-            <div>
-              {posts.map((post) => (
-                <Post post={post} key={post.id} />
-              ))}
-            </div>
-          )}
+      {loading ? (
+        <div style={{ marginTop: 12 }}>
+          <p>Loading posts…</p>
+          <progress />
+        </div>
+      ) : (
+        <div>
+          {posts.map((post) => (
+            <Post post={post} key={post.id} />
+          ))}
+        </div>
+      )}
     </>
   )
 }
