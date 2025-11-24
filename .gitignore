@@ -633,3 +633,5 @@ NODEJS/node_modules/wrappy/wrappy.js
 NODEJS/.env
 NODEJS/package-lock.json
 REACT/src/useeffect.txt
+OUTER HELP/bruteForce.html
+python/bgp.py
